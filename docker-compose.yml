@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: boulderify-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    command:
+      - --quiet
+
+  backend:
+    build: ./backend
+    container_name: boulderify-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/boulderify
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data: 
