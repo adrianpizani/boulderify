@@ -1,27 +1,17 @@
 import express from 'express';
-import Boulder from '../models/Boulder.js';
+import { getAllBoulders, createBoulder, deleteBoulder, getBoulderById, updateBoulder } from '../controllers/boulderController.js';
+import { uploadMiddleware, s3UploadMiddleware } from '../middleware/uploadMiddleware.js';
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    try { 
-        const Boulder = await Boulder.find();
-        res.status(200).json(Boulder);
-    }
-    catch (error) {
-        res.status(500).json({ message: 'Error fetching boulders', error: error.message });
-    }
-})
+// Definición de rutas
+router.route('/')
+    .get(getAllBoulders)
+    .post(uploadMiddleware, s3UploadMiddleware, createBoulder)
 
-router.post('/', async (req, res) => {
-    try{
-        const newBoulder = new Boulder(req.body)
-        const saved = await newBoulder.save()
-        res.status(201).json(saved)
-    }
-    catch (error) {
-        res.status(500).json({ message: 'Error creating boulder', error: error.message });
-    }
-})
+router.route('/:id')
+    .delete(deleteBoulder)
+    .put(updateBoulder) // s3UploadMiddleware,  --> todo later
+    .get(getBoulderById); // Assuming you have a getBoulderById controller
 
 export default router;

@@ -3,14 +3,7 @@ import mongoose  from "mongoose";
 const BoulderSchema = new mongoose.Schema({
     name: String,
     imageUrl: String,
-    image: {
-        data: Buffer,
-        mimetype: String,
-    },
-    thumbnail: {
-        data: Buffer,
-        mimetype: String,
-    },
+    thumbnailUrl: String,
     marks: [Object],
     createdBy: String,
     createdAt: {
